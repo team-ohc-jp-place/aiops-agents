@@ -35,7 +35,12 @@ AWS with OpenShift Open Environment
 
 `./provision/setup/08_ai-agent-operator/setup.sh`
 
-4. Run the following commands
+4. Append your GITHUB ACCOUNT NAME & ACCESS TOKEN in the following file
+
+`./provision/setup/04_ansible/setup.yaml`
+`./provision/setup/07_user_migration_app/setup.sh`
+
+5. Run the following commands
 
 ```
 cd provision/setup
