@@ -1,0 +1,23 @@
+---
+- name: Restart Petstore PostgreSQL Pod
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Restart Deployment by updating spec.template.metadata.annotations
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: postgresql
+        namespace: petstore
+        definition:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  kubernetes.io/change-cause: "Restarted at {{ ansible_date_time.iso8601 }}"
+
+      register: restart_result
+
+    - name: Display result
+      debug:
+        var: restart_result

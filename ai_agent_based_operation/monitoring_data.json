@@ -1,0 +1,19 @@
+{
+    "application_server": {
+        "cpu": "5%",
+        "memory": "5%",
+        "error_log": [
+            "error: sorry, too many clients already\n    at /home/tikeda/workspace/temp/petstore_demo/node_modules/pg-pool/index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async <anonymous> (/home/tikeda/workspace/temp/petstore_demo/node_modules/src/node-postgres/session.ts:104:19)\n    at async Strategy._verify (/home/tikeda/workspace/temp/petstore_demo/server/auth.ts:64:24)"
+        ]
+    },
+    "database": {
+        "cpu": "100%",
+        "memory": "100%",
+        "error_log": []
+    },
+    "user_migration_app": {
+        "cpu": "100%",
+        "memory": "5%",
+        "error_log": []
+    }
+}

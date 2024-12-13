@@ -1,0 +1,49 @@
+all:
+  hosts:
+    localhost:
+      ansible_host: 127.0.0.1
+      ansible_connection: local
+      automation_controller_host: "localhost"
+      automation_controller_config: "/tmp/automation_controller.cfg"
+      organization: "Default"
+      job_templates:
+      - name: application_server_reset
+        playbook: "ansible_playbook/application_server_reset.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: database_reset
+        playbook: "ansible_playbook/database_reset.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: user_migration_app_reset
+        playbook: "ansible_playbook/user_migration_app_reset.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: application_server_stop
+        playbook: "ansible_playbook/application_server_stop.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: database_stop
+        playbook: "ansible_playbook/database_stop.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: user_migration_app_stop
+        playbook: "ansible_playbook/user_migration_app_stop.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: application_server_start
+        playbook: "ansible_playbook/application_server_start.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: database_start
+        playbook: "ansible_playbook/database_start.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: user_migration_app_start
+        playbook: "ansible_playbook/user_migration_app_start.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False
+      - name: hello_world
+        playbook: "ansible_playbook/hello_world.yaml"
+        ask_limit_on_launch: False
+        ask_variables_on_launch: False

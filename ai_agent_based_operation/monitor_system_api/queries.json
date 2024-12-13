@@ -1,0 +1,12 @@
+{
+    "cpu": {
+        "application_server": "pod:container_cpu_usage:sum{pod=~\"petstore-demo-.*\", namespace=\"petstore\"} / (sum(kube_pod_resource_limit{resource=\"cpu\", pod=~\"petstore-demo-.*\", namespace=\"petstore\"}) BY (pod, namespace))",
+        "database": "pod:container_cpu_usage:sum{pod=~\"postgresql-.*\", namespace=\"petstore\"} / (sum(kube_pod_resource_limit{resource=\"cpu\", pod=~\"postgresql-.*\", namespace=\"petstore\"}) BY (pod, namespace))",
+        "user_migration_app": "pod:container_cpu_usage:sum{pod=~\"user-migration-app-.*\", namespace=\"petstore\"} / (sum(kube_pod_resource_limit{resource=\"cpu\", pod=~\"user-migration-app-.*\", namespace=\"petstore\"}) BY (pod, namespace))"
+    },
+    "memory": {
+        "application_server": "sum(container_memory_working_set_bytes{namespace=\"petstore\", pod=~\"petstore-demo-.*\", container=\"petstore-demo\"}) / sum(container_spec_memory_limit_bytes{namespace=\"petstore\", pod=~\"petstore-demo-.*\", container=\"petstore-demo\"})",
+        "database": "sum(container_memory_working_set_bytes{namespace=\"petstore\", pod=~\"postgresql-.*\", container=\"postgresql\"}) / sum(container_spec_memory_limit_bytes{namespace=\"petstore\", pod=~\"postgresql-.*\", container=\"postgresql\"})",
+        "user_migration_app": "sum(container_memory_working_set_bytes{namespace=\"petstore\", pod=~\"user-migration-app-.*\", container=\"user-migration-app\"}) / sum(container_spec_memory_limit_bytes{namespace=\"petstore\", pod=~\"user-migration-app-.*\", container=\"user-migration-app\"})"
+    }
+}

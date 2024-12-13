@@ -1,0 +1,5 @@
+ansible automation platformのサブスクリプションマニフェストを、
+
+automationcontroller_manifest.zip 
+
+というファイル名でこのフォルダに格納すること。

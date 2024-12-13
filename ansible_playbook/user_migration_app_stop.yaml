@@ -1,0 +1,20 @@
+---
+- name: Stop User Migration App Deployment
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Scale down Deployment to zero replicas
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: user-migration-app
+        namespace: petstore
+        definition:
+          spec:
+            replicas: 0
+
+      register: scale_down_result
+
+    - name: Display result
+      debug:
+        var: scale_down_result

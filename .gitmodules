@@ -1,0 +1,3 @@
+[submodule "ai_agent_based_operation"]
+	path = ai_agent_based_operation
+	url = https://github.com/tikeda123/ai_agent_based_operation

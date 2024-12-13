@@ -1,0 +1,114 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    inventory_name: "my_inventory"
+    inventory_description: "AI Odyssey"
+    project_name: "my_project"
+    organization: "Default"
+    openshift_api_server: "{{ lookup('pipe', 'oc whoami --show-server') }}"
+    openshift_api_token: "{{ lookup('pipe', 'oc whoami --show-token') }}"
+    openshift_api_credential_name: "openshift_api_bearer_token"
+    gitlab_username: <input your-name>
+    gitlab_access_token: <input your-git-access-token>
+    gitlab_access_credential_name: "gitlab_access_token"
+    gitlab_repository_url: "https://github.com/team-ohc-jp-place/aiops-agents.git"
+    localhost_name: "localhost"
+    localhost_description: "Localhost description"
+    localhost_variables: |
+      ansible_connection: local
+      ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  tasks:
+    - name: Create automation_controller.cfg
+      copy:
+        dest: "{{ automation_controller_config }}"
+        content: |
+          host: "{{ automation_controller_host }}"
+          verify_ssl: true
+          username: admin
+          password: redhat
+
+    - name: Add operator user
+      awx.awx.user:
+        username: operator
+        password: redhat
+        email: operator@example.com
+        first_name: Operator
+        last_name: Operator
+        state: present
+        superuser: yes
+        controller_config_file: "{{ automation_controller_config }}"
+
+    - name: Add OpenShift API bearer token credential
+      awx.awx.credential:
+        name: "{{ openshift_api_credential_name }}"
+        description: "OpenShift or Kubernetes API Bearer Token"
+        organization: "{{ organization }}"
+        credential_type: "OpenShift or Kubernetes API Bearer Token"
+        inputs:
+          host: "{{ openshift_api_server }}"
+          bearer_token: "{{ openshift_api_token }}"
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+
+    - name: Add Gitlab Access token credential
+      awx.awx.credential:
+        name: "{{ gitlab_access_credential_name }}"
+        description: "Gitlab Access Token"
+        organization: "{{ organization }}"
+        credential_type: "Source Control"
+        inputs:
+          username: "{{ gitlab_username }}"
+          password: "{{ gitlab_access_token }}"
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+
+    - name: Add Inventory
+      awx.awx.inventory:
+        name: "{{ inventory_name }}"
+        description: "{{ inventory_description }}"
+        organization: "{{ organization }}"
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+
+    - name: Add localhost to Inventory
+      awx.awx.host:
+        name: "{{ localhost_name }}"
+        description: "{{ localhost_description }}"
+        inventory: "{{ inventory_name }}"
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+        variables:
+          ansible_connection: "local"
+          ansible_python_interpreter: "{{ '{{ ansible_playbook_python }}' }}"
+
+    - name: Add Project
+      awx.awx.project:
+        name: "{{ project_name }}" # プロジェクト名（例: ChatBiz Demo）
+        description: "AI Odyssey"
+        organization: "{{ organization }}" # 組織名（例: Default）
+        default_environment: "Default execution environment"
+        scm_type: "git"
+        scm_update_on_launch: False
+        scm_url: "{{ gitlab_repository_url }}" # GitLabリポジトリURL
+        scm_credential: "{{ gitlab_access_credential_name }}" # 作成した認証情報を指定
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+
+    - name: Add Job Templates
+      awx.awx.job_template:
+        name: "{{ item['name'] }}"
+        job_type: "run"
+        organization: "{{ organization }}"
+        inventory: "{{ inventory_name }}"
+        project: "{{ project_name }}"
+        playbook: "{{ item['playbook'] }}"
+        ask_limit_on_launch: "{{ item['ask_limit_on_launch'] }}"
+        ask_variables_on_launch: "{{ item['ask_variables_on_launch'] }}"
+        allow_simultaneous: true
+        state: present
+        controller_config_file: "{{ automation_controller_config }}"
+        survey_enabled: no
+        credentials:
+          - "{{ openshift_api_credential_name }}"
+      with_items: "{{ job_templates }}"

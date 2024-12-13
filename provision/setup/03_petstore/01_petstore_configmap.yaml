@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+  namespace: petstore # 必要に応じて namespace を指定
+data:
+  PGHOST: "postgresql.petstore.svc.cluster.local"
+  PGPORT: "5432"
+  PGUSER: "chatbiz"
+  PGPASSWORD: "chatbiz"
+  PGDATABASE: "mydatabase"

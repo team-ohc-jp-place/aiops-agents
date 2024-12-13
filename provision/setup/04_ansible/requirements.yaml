@@ -1,0 +1,9 @@
+---
+# 2024/11/17時点での最新版
+collections:
+  - name: community.general
+    version: 9.5.1
+#    version: 5.0.0
+  - name: awx.awx
+    version: 24.6.1
+#    version: 21.0.0

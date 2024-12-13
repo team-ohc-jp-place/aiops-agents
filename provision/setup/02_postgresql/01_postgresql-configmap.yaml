@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-scripts
+  labels: 
+    name: postgresql
+data:
+  init.sql: |
+    -- Create table: users
+    CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        is_admin BOOLEAN DEFAULT FALSE NOT NULL
+    );
+
+    -- Create table: pets
+    CREATE TABLE pets (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        species TEXT NOT NULL,
+        breed TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        price DECIMAL NOT NULL,
+        description TEXT NOT NULL,
+        image_url TEXT NOT NULL,
+        stock INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL
+    );
+
+    -- Create table: orders
+    CREATE TABLE orders (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        total DECIMAL NOT NULL,
+        status TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL
+    );
+
+    -- Create table: order_items
+    CREATE TABLE order_items (
+        id SERIAL PRIMARY KEY,
+        order_id INTEGER REFERENCES orders(id),
+        pet_id INTEGER REFERENCES pets(id),
+        quantity INTEGER NOT NULL,
+        price DECIMAL NOT NULL
+    );
+
+    -- Insert admin user ('admin', 'admin123')
+    INSERT INTO users (username, password, is_admin)
+    VALUES 
+    ('admin', 'd45a6101addc82c594888e577977b3af6af4d38793f9a433ba2b4798d5a87c7e985d7310690d39d9538fec04c57edd93c6c8ab652338310ac0e57c0b85772ed1.e0c14535aad41a303d58d658df8c7602', true);
+
+    -- Insert sample pets
+    INSERT INTO pets (name, species, breed, age, price, description, image_url, stock)
+    VALUES
+    -- Dogs
+    ('Max', 'dog', 'Golden Retriever', 2, 799.99, 'Friendly and energetic Golden Retriever puppy. Great with kids!', 'https://images.unsplash.com/photo-1422565096762-bdb997a56a84', 1),
+    ('Bella', 'dog', 'Poodle', 3, 899.99, 'Well-trained standard poodle. Hypoallergenic and great family pet.', 'https://images.unsplash.com/photo-1516371535707-512a1e83bb9a', 1),
+    ('Buddy', 'dog', 'Labrador Retriever', 1, 699.99, 'Friendly Labrador puppy, perfect for active families.', 'https://images.unsplash.com/photo-1537204696486-967f1b7198c8', 1),
+    ('Daisy', 'dog', 'Beagle', 2, 499.99, 'Playful Beagle with a great sense of smell. Loves adventures!', 'https://images.unsplash.com/photo-1707298737261-069e2d529eaa', 1),
+    ('Rocky', 'dog', 'German Shepherd', 3, 849.99, 'Loyal and protective German Shepherd. Great for security.', 'https://images.unsplash.com/photo-1614595402938-ecee8416e6b5', 1),
+    ('Milo', 'dog', 'Shih Tzu', 1, 599.99, 'Cute Shih Tzu puppy with a fluffy coat. Excellent companion.', 'https://images.unsplash.com/photo-1695457601176-b779cf426428', 1),
+    ('Lucy', 'dog', 'Cocker Spaniel', 4, 549.99, 'Affectionate Cocker Spaniel with a gentle personality.', 'https://images.unsplash.com/photo-1601329493952-a6a52ad5d664', 1),
+    -- Cats
+    ('Luna', 'cat', 'Siamese', 1, 599.99, 'Elegant Siamese kitten with beautiful blue eyes. Very affectionate.', 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8', 1),
+    ('Oliver', 'cat', 'Maine Coon', 2, 649.99, 'Large and fluffy Maine Coon. Gentle giant.', 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131', 1),
+    ('Mochi', 'cat', 'Bengal', 1, 799.99, 'Exotic Bengal cat with striking markings. Very active.', 'https://images.unsplash.com/photo-1574158622682-e40e69881006', 1),
+    ('Shadow', 'cat', 'Persian', 3, 749.99, 'Elegant Persian cat with a calm demeanor. Ideal for quiet homes.', 'https://images.unsplash.com/photo-1701036450127-09a55324d11e', 1),
+    ('Chloe', 'cat', 'Ragdoll', 1, 699.99, 'Soft and cuddly Ragdoll kitten. Loves to be held.', 'https://images.unsplash.com/photo-1472491235688-bdc81a63246e', 1),
+    ('Simba', 'cat', 'Scottish Fold', 2, 649.99, 'Adorable Scottish Fold with unique folded ears.', 'https://images.unsplash.com/photo-1577622190210-bb932ad860dd', 1),
+    -- Birds
+    ('Charlie', 'bird', 'Budgie', 1, 49.99, 'Colorful and cheerful budgie. Already trained to step up!', 'https://images.unsplash.com/photo-1591198936750-16d8e15edb9e', 1),
+    ('Sunny', 'bird', 'Canary', 1, 39.99, 'Chirpy Canary with a beautiful yellow plumage.', 'https://images.unsplash.com/photo-1540554341341-f9134ca0df1a', 1),
+    ('Kiwi', 'bird', 'Parrotlet', 2, 79.99, 'Tiny and friendly Parrotlet. Easy to train.', 'https://images.unsplash.com/photo-1486365227551-f3f90034a57c', 1),
+    ('Coco', 'bird', 'Cockatiel', 1, 89.99, 'Charming Cockatiel with a whistle repertoire.', 'https://images.unsplash.com/photo-1615827453817-128e639ba2cf', 1),
+    ('Ruby', 'bird', 'Lovebird', 1, 69.99, 'Vibrant Lovebird, ideal for beginner bird owners.', 'https://images.unsplash.com/photo-1617374595977-8d5df37ec747', 1),
+    ('Pepper', 'bird', 'African Grey Parrot', 3, 599.99, 'Highly intelligent African Grey Parrot. Amazing talker!', 'https://images.unsplash.com/photo-1613412346356-44e4778faf70', 1);
