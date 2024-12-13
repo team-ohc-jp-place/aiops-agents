@@ -38,6 +38,7 @@ AWS with OpenShift Open Environment
 4. Append your GITHUB ACCOUNT NAME & ACCESS TOKEN in the following file
 
 `./provision/setup/04_ansible/setup.yaml`
+
 `./provision/setup/07_user_migration_app/setup.sh`
 
 5. Run the following commands
